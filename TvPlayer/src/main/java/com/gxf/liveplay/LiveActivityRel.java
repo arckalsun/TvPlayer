@@ -31,6 +31,8 @@ import com.gxf.liveplay.ijkplayer.media.IjkVideoView;
 import com.gxf.liveplay.update.UpdateAppReceiver;
 import com.gxf.liveplay.update.UpdateAppUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -131,16 +133,22 @@ public class LiveActivityRel extends Activity {
 //                handler.sendMessage(message);
 //            }
 //        }).start();
-        initUI();
+        try {
+            initUI();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         initDialog();
         initVideo();
         //new TimeThread().start(); //启动新的线程刷新时间
     }
 
-    private void initUI() {
-        mHeaders.put("User-Agent","Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.2; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; .NET CLR 2.0.50727; .NET CLR 3.0.30729; .NET CLR 3.5.30729; .NET CLR 1.1.4322; systeccloud 3.5.1)");
-        mHeaders.put("Cache-Control","no-cache");
-        mVideoUrl = getIntent().getStringExtra("url");
+    private void initUI() throws UnsupportedEncodingException {
+        mHeaders.put("User-Agent"," Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.2; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; .NET CLR 2.0.50727; .NET CLR 3.0.30729; .NET CLR 3.5.30729; .NET CLR 1.1.4322; systeccloud 3.5.1)");
+        mHeaders.put("cache-control"," no-cache");
+        mHeaders.put("Pragma"," no-cache");
+//        mHeaders.put("Pragma"," no-cache");
+        mVideoUrl = URLDecoder.decode(getIntent().getStringExtra("url"),"UTF-8");
         //定位当前频道位置，用于上下切换频道
         PlayListCache.locateCurrChannel(mVideoUrl);
         SharedPreferences userSettings = getSharedPreferences("auth", Context.MODE_PRIVATE);
@@ -258,7 +266,7 @@ public class LiveActivityRel extends Activity {
                 mLoadingLayout.setVisibility(View.VISIBLE);
                 mVideoView.stopPlayback();
                 mVideoView.release(true);
-                mVideoView.setVideoURI(Uri.parse(mVideoUrl));
+                mVideoView.setVideoURI(Uri.parse(mVideoUrl), mHeaders);
             }
         });
 
@@ -280,7 +288,7 @@ public class LiveActivityRel extends Activity {
                 } else {
                     mVideoView.stopPlayback();
                     mVideoView.release(true);
-                    mVideoView.setVideoURI(Uri.parse(mVideoUrl));
+                    mVideoView.setVideoURI(Uri.parse(mVideoUrl), mHeaders);
                 }
                 return false;
             }
