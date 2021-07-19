@@ -37,7 +37,7 @@ public class InfoHudViewHolder {
 
     public InfoHudViewHolder(Context context, TableLayout tableLayout) {
         mTableLayoutBinder = new TableLayoutBinder(context, tableLayout);
-
+        // FIXME
         appendRow(R.string.fps_decode);
         appendRow(R.string.fps_output);
     }

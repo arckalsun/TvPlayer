@@ -221,7 +221,7 @@ public final class MeasureHelper {
         String text;
         switch (aspectRatio) {
             case IRenderView.AR_ASPECT_FIT_PARENT:
-                text = context.getString(R.string.VideoView_ar_aspect_fit_parent);
+                text = context.getString(R.string.VideoView_ar_aspect_fit_parent); // FIXME
                 break;
             case IRenderView.AR_ASPECT_FILL_PARENT:
                 text = context.getString(R.string.VideoView_ar_aspect_fill_parent);

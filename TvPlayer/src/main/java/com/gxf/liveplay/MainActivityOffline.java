@@ -27,6 +27,7 @@ public class MainActivityOffline extends Activity {
                     String url = lastVedioUrl;
                     if (url.equals("none"))
                         url = PlayListCache.playListMap.get(PlayListCache.playListMap.keySet().iterator().next());
+                    url = "https://d1--cn-gotcha04.bilivideo.com/live-bvc/570940/live_290515513_3522421_1500.flv?expires=1626684890&len=0&oi=1698974378&pt=web&qn=0&trid=10000cd0020b6f7d44a1835f1195ea40b7ea&sigparams=cdn,expires,len,oi,pt,qn,trid&cdn=cn-gotcha04&sign=da8439f69e4de49290ddb547acaa48e4&p2p_type=0&src=9&sl=1&free_type=0&sk=417e709c171a500";
                     LiveActivityRel.activityStart(MainActivityOffline.this, url);
                     MainActivityOffline.this.finish();
                 } catch (Exception e) {

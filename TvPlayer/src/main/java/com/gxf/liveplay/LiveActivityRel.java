@@ -53,6 +53,8 @@ public class LiveActivityRel extends Activity {
     private TextView mLoadingText;
     private TextView mTextClock;
     private String mVideoUrl = "";
+    private Map<String, String> mHeaders = new HashMap<String, String>();
+
     private int mRetryTimes = 0;
     private static final int CONNECTION_TIMES = 5;
     private ListView listView;
@@ -119,16 +121,16 @@ public class LiveActivityRel extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_rel);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Map<String, String> versionInfo = HttpUtils.getVersionInfo();
-                Message message = Message.obtain();
-                message.obj = versionInfo;
-                message.what = 1;
-                handler.sendMessage(message);
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Map<String, String> versionInfo = HttpUtils.getVersionInfo();
+//                Message message = Message.obtain();
+//                message.obj = versionInfo;
+//                message.what = 1;
+//                handler.sendMessage(message);
+//            }
+//        }).start();
         initUI();
         initDialog();
         initVideo();
@@ -136,6 +138,8 @@ public class LiveActivityRel extends Activity {
     }
 
     private void initUI() {
+        mHeaders.put("User-Agent","Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.2; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; .NET CLR 2.0.50727; .NET CLR 3.0.30729; .NET CLR 3.5.30729; .NET CLR 1.1.4322; systeccloud 3.5.1)");
+        mHeaders.put("Cache-Control","no-cache");
         mVideoUrl = getIntent().getStringExtra("url");
         //定位当前频道位置，用于上下切换频道
         PlayListCache.locateCurrChannel(mVideoUrl);
@@ -223,7 +227,7 @@ public class LiveActivityRel extends Activity {
         // init player`
         IjkMediaPlayer.loadLibrariesOnce(null);
         IjkMediaPlayer.native_profileBegin("libijkplayer.so");
-        mVideoView.setVideoURI(Uri.parse(mVideoUrl));
+        mVideoView.setVideoURI(Uri.parse(mVideoUrl), mHeaders);
         mVideoView.setOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(IMediaPlayer mp) {
