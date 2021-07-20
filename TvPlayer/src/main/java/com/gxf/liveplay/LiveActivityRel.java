@@ -21,6 +21,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -28,6 +29,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.gxf.liveplay.ijkplayer.media.IjkVideoView;
+import com.gxf.liveplay.site.LiveBilibili;
 import com.gxf.liveplay.update.UpdateAppReceiver;
 import com.gxf.liveplay.update.UpdateAppUtils;
 
@@ -61,6 +63,7 @@ public class LiveActivityRel extends Activity {
     private static final int CONNECTION_TIMES = 5;
     private ListView listView;
     private TextView tvGroupTitle;
+    private EditText editText;
     private AlertDialog.Builder builder;
     private int choice = 1;
     private UpdateAppReceiver updateAppReceiver = new UpdateAppReceiver();
@@ -177,6 +180,21 @@ public class LiveActivityRel extends Activity {
         mLoadingText = (TextView) findViewById(R.id.tv_load_msg);
         mLoadingText.setText("节目加载中...");
         //mTextClock = (TextView) findViewById(R.id.tv_time);
+        editText = (EditText)  findViewById(R.id.liveId);
+        editText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    String roomId = editText.getText().toString().trim();
+                    mLoadingText.setText("直播"+roomId+"加载中...");
+                    LiveBilibili.LiveInfo info = LiveBilibili.parseLiveInfo(roomId);
+                    LiveActivityRel.activityStart(LiveActivityRel.this, info.getLiveUrl());
+                    //结束当前播放
+                    LiveActivityRel.this.finish();
+                }
+                return false;
+            }
+        });
     }
 
     private ArrayList<HashMap<String, String>> reNo(ArrayList<HashMap<String, String>> group) {

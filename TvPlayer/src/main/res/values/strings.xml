@@ -14,6 +14,7 @@
     <string name="permission_rationale">权限不足</string>
     <string name="gdtslogan">GDTslogan</string>
     <string name="click_to_skip">点击跳过</string>
+    <string name="hint_roomid">请输入B站房间号</string>
     <string name="title_alert">提示信息</string>
     <string name="cancel">取消</string>
     <string name="sure">确认</string>

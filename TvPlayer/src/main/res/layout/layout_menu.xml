@@ -44,7 +44,14 @@
             android:onClick="turnRight" />
 
     </LinearLayout>
-
+    <EditText
+        android:text="9196015"
+        android:hint="@string/hint_roomid"
+        android:id="@+id/liveId"
+        android:singleLine="true"
+        android:layout_width="match_parent"
+        android:layout_height="100px"
+        />
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"

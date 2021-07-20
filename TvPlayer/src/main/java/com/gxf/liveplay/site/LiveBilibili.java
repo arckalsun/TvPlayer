@@ -16,15 +16,37 @@ public class LiveBilibili {
 
     private static String baseUrl = "https://live.bilibili.com/";
     private static Pattern pattern =  Pattern.compile("__NEPTUNE_IS_MY_WAIFU__=\\{(.+?)}</script>");
-//    private static Pattern pattern =  Pattern.compile("__NEPTUNE_IS_MY_WAIFU__={(.+?)}</script>");
-//    private static Pattern pattern =  Pattern.compile("__NEPTUNE_IS_MY_WAIFU__=\\{\\(.+?\\)}</script>");
     public static class LiveInfo{
-        String roomId;
-        String liveUrl;
-        String name;
+        private String roomId;
+        private String liveUrl;
+        private String name;
+
+        public String getRoomId() {
+            return roomId;
+        }
+
+        public void setRoomId(String roomId) {
+            this.roomId = roomId;
+        }
+
+        public String getLiveUrl() {
+            return liveUrl;
+        }
+
+        public void setLiveUrl(String liveUrl) {
+            this.liveUrl = liveUrl;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
 
         public String toString(){
-            return "roomid: " + roomId + "\nname: "+name + "\nliveUrl: " + liveUrl + "\n";
+                return "roomid: " + roomId + "\nname: "+name + "\nliveUrl: " + liveUrl + "\n";
         }
     }
     /**
@@ -34,6 +56,7 @@ public class LiveBilibili {
      * @return
      */
     public static LiveInfo parseLiveInfo(String roomId) {
+        System.out.println("parse live info");
         LiveInfo liveInfo = new LiveInfo();
         try {
             OkHttpClient client = new OkHttpClient();
@@ -57,9 +80,9 @@ public class LiveBilibili {
                     .getJSONArray("format").getJSONObject(0).getJSONArray("codec").getJSONObject(0);
             JSONObject url_info = codec.getJSONArray("url_info").getJSONObject(0);
 
-            liveInfo.roomId = roomId;
-            liveInfo.name = jsonObject.getJSONObject("roomInfoRes").getJSONObject("data").getJSONObject("room_info").getString("title");
-            liveInfo.liveUrl = url_info.getString("host") + codec.getString("base_url") + url_info.getString("extra");
+            liveInfo.setRoomId(roomId);
+            liveInfo.setName(jsonObject.getJSONObject("roomInfoRes").getJSONObject("data").getJSONObject("room_info").getString("title"));
+            liveInfo.setLiveUrl(url_info.getString("host") + codec.getString("base_url") + url_info.getString("extra"));
 
         } catch (IOException e) {
             e.printStackTrace();
