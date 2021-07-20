@@ -187,10 +187,16 @@ public class LiveActivityRel extends Activity {
                 if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     String roomId = editText.getText().toString().trim();
                     mLoadingText.setText("直播"+roomId+"加载中...");
-                    LiveBilibili.LiveInfo info = LiveBilibili.parseLiveInfo(roomId);
-                    LiveActivityRel.activityStart(LiveActivityRel.this, info.getLiveUrl());
-                    //结束当前播放
-                    LiveActivityRel.this.finish();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            LiveBilibili.LiveInfo info = new LiveBilibili().parseLiveInfo(roomId);
+                            LiveActivityRel.activityStart(LiveActivityRel.this, info.getLiveUrl());
+                            //结束当前播放
+                            LiveActivityRel.this.finish();
+                        }
+                    }).start();
+
                 }
                 return false;
             }

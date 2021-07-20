@@ -1,9 +1,13 @@
 package com.gxf.liveplay.site;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -14,14 +18,27 @@ import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
-@RunWith(AndroidJUnit4.class)
+//@RunWith(AndroidJUnit4.class)
 public class LiveBilibiliAndroidTest {
+    Context appContext = null;
+
+    @Before
+    public void setUp(){
+        appContext = InstrumentationRegistry.getTargetContext();
+        System.out.println(appContext);
+    }
 
     @Test
-    public void useAppContext() {
+    public void onCreate() throws PackageManager.NameNotFoundException {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
         System.out.println(appContext.getPackageName());
+
+        ApplicationInfo applicationInfo = appContext.getPackageManager().getApplicationInfo(appContext.getPackageName(), PackageManager.GET_META_DATA);
+        Bundle metaData = applicationInfo.metaData;
+        String data = metaData.getString("com.gxf.liveplay");
+        System.out.println(data);
+
 //        testParseLiveInfo();
     }
 
@@ -30,7 +47,7 @@ public class LiveBilibiliAndroidTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
         assertEquals("com.gxf.liveplay", appContext.getPackageName());
-        LiveBilibili.LiveInfo info = LiveBilibili.parseLiveInfo("9196015");
+        LiveBilibili.LiveInfo info = new LiveBilibili().parseLiveInfo("9196015");
         System.out.println(info);
     }
 

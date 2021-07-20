@@ -1,5 +1,7 @@
 package com.gxf.liveplay.site;
 
+import android.util.Log;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
@@ -14,9 +16,9 @@ import okhttp3.Response;
 
 public class LiveBilibili {
 
-    private static String baseUrl = "https://live.bilibili.com/";
-    private static Pattern pattern =  Pattern.compile("__NEPTUNE_IS_MY_WAIFU__=\\{(.+?)}</script>");
-    public static class LiveInfo{
+    private  String baseUrl = "https://live.bilibili.com/";
+    private  Pattern pattern =  Pattern.compile("__NEPTUNE_IS_MY_WAIFU__=\\{(.+?)\\}<");
+    public  class LiveInfo{
         private String roomId;
         private String liveUrl;
         private String name;
@@ -55,7 +57,7 @@ public class LiveBilibili {
      * @param roomId
      * @return
      */
-    public static LiveInfo parseLiveInfo(String roomId) {
+    public  LiveInfo parseLiveInfo(String roomId) {
         System.out.println("parse live info");
         LiveInfo liveInfo = new LiveInfo();
         try {
@@ -86,6 +88,7 @@ public class LiveBilibili {
 
         } catch (IOException e) {
             e.printStackTrace();
+            Log.w("LIVE_PARSE", "解析直播流失败,roomId: "+roomId);
         }
         return liveInfo;
     }

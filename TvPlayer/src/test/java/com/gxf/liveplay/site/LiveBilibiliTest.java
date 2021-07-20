@@ -13,7 +13,7 @@ public class LiveBilibiliTest {
 
     @Test
     public void parseLiveInfo() {
-        LiveBilibili.LiveInfo info = LiveBilibili.parseLiveInfo("9196015");
+        LiveBilibili.LiveInfo info = new LiveBilibili().parseLiveInfo("9196015");
         System.out.println(info);
     }
 
