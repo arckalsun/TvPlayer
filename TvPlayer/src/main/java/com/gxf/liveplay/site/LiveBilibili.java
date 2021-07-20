@@ -15,7 +15,7 @@ import okhttp3.Response;
 public class LiveBilibili {
 
     private static String baseUrl = "https://live.bilibili.com/";
-    private static Pattern pattern =  Pattern.compile("__NEPTUNE_IS_MY_WAIFU__=\\{\\(\\.\\+\\?\\)}</script>");
+    private static Pattern pattern =  Pattern.compile("__NEPTUNE_IS_MY_WAIFU__=\\{(.+?)}</script>");
 //    private static Pattern pattern =  Pattern.compile("__NEPTUNE_IS_MY_WAIFU__={(.+?)}</script>");
 //    private static Pattern pattern =  Pattern.compile("__NEPTUNE_IS_MY_WAIFU__=\\{\\(.+?\\)}</script>");
     public static class LiveInfo{
@@ -36,7 +36,6 @@ public class LiveBilibili {
     public static LiveInfo parseLiveInfo(String roomId) {
         LiveInfo liveInfo = new LiveInfo();
         try {
-            System.out.println(pattern.pattern());
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .addHeader("accept","*/*")
@@ -46,11 +45,12 @@ public class LiveBilibili {
                     .url(baseUrl + roomId).build();
             Response response = client.newCall(request).execute();
             String result = response.body().string();
-            System.out.println(result);
             // 正则取出json字符串
             Matcher m = pattern.matcher(result);
-            String jsonStr = m.group();
-            System.out.println(jsonStr);
+            String jsonStr = "";
+            while (m.find()) {
+                jsonStr = "{" + m.group(1) + "}";
+            }
             JSONObject jsonObject = (JSONObject) JSON.parse(jsonStr);
             JSONObject codec = jsonObject.getJSONObject("roomInitRes").getJSONObject("data")
                     .getJSONObject("playurl_info").getJSONObject("playurl").getJSONArray("stream").getJSONObject(0)

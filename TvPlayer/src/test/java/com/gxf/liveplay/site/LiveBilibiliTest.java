@@ -20,12 +20,18 @@ public class LiveBilibiliTest {
     @Test
     public void parsePattern() {
         // "__NEPTUNE_IS_MY_WAIFU__=\\{\\(\\.\\+\\?\\)\\}</script>"
-        Pattern pattern =  Pattern.compile("__NEPTUNE_IS_MY_WAIFU__=\\{\\(\\.\\+\\?\\)\\}</script>");
+//        Pattern pattern =  Pattern.compile("__NEPTUNE_IS_MY_WAIFU__=\\{([^}.]+?)\\}</script>");
+        Pattern pattern =  Pattern.compile("__NEPTUNE_IS_MY_WAIFU__=\\{(.+?)}</script>");
+//        Pattern pattern =  Pattern.compile("__NEPTUNE_IS_MY_WAIFU__=\\{([^}])*\\}</script>");
         String content = "<script>window.__NEPTUNE_IS_MY_WAIFU__={\"roomInitRes\":{\"code\":0,\"message\":\"0\",\"ttl\":1}}</script>";
         System.out.println(content);
         Matcher m = pattern.matcher(content);
-        String jsonStr = m.group();
-        System.out.println(jsonStr);
+        System.out.println(pattern.pattern());
+//        assert  m.find();
+        while (m.find()) {
+            System.out.println(m.group(1));
+        }
+
     }
 
     @Test
