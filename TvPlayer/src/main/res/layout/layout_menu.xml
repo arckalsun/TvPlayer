@@ -45,7 +45,7 @@
 
     </LinearLayout>
     <EditText
-        android:text="9196015"
+        android:text=""
         android:hint="@string/hint_roomid"
         android:id="@+id/liveId"
         android:singleLine="true"

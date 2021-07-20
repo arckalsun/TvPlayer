@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -168,39 +169,71 @@ public class LiveActivityRel extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 TextView textView = (TextView) view.findViewById(R.id.tvInfo);
                 String tvInfo = (String) textView.getText();
+                mLoadingText.setText("直播加载中：" + tvInfo);
+                mLoadingLayout.setVisibility(View.VISIBLE);
                 //mMenu.toggle();
                 LiveActivityRel.activityStart(LiveActivityRel.this, PlayListCache.playListMap.get(tvInfo));
+                mLoadingLayout.setVisibility(View.GONE);
                 //结束当前播放
                 LiveActivityRel.this.finish();
             }
         });
+//        TextView textView = (TextView) findViewById(R.id.tvInfo);
+//        String tvInfo = (String) textView.getText();
         mVideoView = (IjkVideoView) findViewById(R.id.videoview);
         mVideoViewLayout = (RelativeLayout) findViewById(R.id.fl_videoview);
         mLoadingLayout = (RelativeLayout) findViewById(R.id.rl_loading);
         mLoadingText = (TextView) findViewById(R.id.tv_load_msg);
-        mLoadingText.setText("节目加载中...");
+        mLoadingText.setText("直播加载中...");
         //mTextClock = (TextView) findViewById(R.id.tv_time);
         editText = (EditText)  findViewById(R.id.liveId);
-        editText.setOnKeyListener(new View.OnKeyListener() {
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+            public void onFocusChange(View view, boolean b) {
+                Log.d("TEST", b+"");
+                if(!b){
                     String roomId = editText.getText().toString().trim();
-                    mLoadingText.setText("直播"+roomId+"加载中...");
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            LiveBilibili.LiveInfo info = new LiveBilibili().parseLiveInfo(roomId);
-                            LiveActivityRel.activityStart(LiveActivityRel.this, info.getLiveUrl());
-                            //结束当前播放
-                            LiveActivityRel.this.finish();
-                        }
-                    }).start();
+                    if(roomId.length()>0){
+                        mLoadingText.setText("直播"+roomId+"加载中...");
+                        mLoadingLayout.setVisibility(View.VISIBLE);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                LiveBilibili.LiveInfo info = new LiveBilibili().parseLiveInfo(roomId);
+                                LiveActivityRel.activityStart(LiveActivityRel.this, info.getLiveUrl());
+                                //结束当前播放
+//                                mLoadingLayout.setVisibility(View.GONE);
+                                LiveActivityRel.this.finish();
+                            }
+                        }).start();
+                    }
 
                 }
-                return false;
+
             }
         });
+//        editText.setOnKeyListener(new View.OnKeyListener() {
+//            @Override
+//            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+//                if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER || keyEvent.getKeyCode()==KeyEvent.ACTION_UP) {
+//                    String roomId = editText.getText().toString().trim();
+//                    mLoadingText.setText("直播"+roomId+"加载中...");
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            LiveBilibili.LiveInfo info = new LiveBilibili().parseLiveInfo(roomId);
+//                            LiveActivityRel.activityStart(LiveActivityRel.this, info.getLiveUrl());
+//                            //结束当前播放
+//                            LiveActivityRel.this.finish();
+//                        }
+//                    }).start();
+//
+//                }else{
+//                    Log.d("TEST", i+", " + keyEvent.toString());
+//                }
+//                return false;
+//            }
+//        });
     }
 
     private ArrayList<HashMap<String, String>> reNo(ArrayList<HashMap<String, String>> group) {
